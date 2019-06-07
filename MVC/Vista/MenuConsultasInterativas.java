@@ -23,7 +23,7 @@ public class MenuConsultasInterativas implements IGestaoVendasVista
         System.out.println(" 7 - TOP 3 maiores compradores filial a filial");
         System.out.println(" 8 - TOP n maiores compradores de produtos distintos.");
         System.out.println(" 9 - TOP n clientes que compraram um determinado produto.");
-        System.out.println("10 - Faturaçao total de cada produto, mês a mês, filial a filial.");
+        System.out.println("10 - Faturação total de cada produto, mês a mês, filial a filial.");
         System.out.println(" 0 - Sair");
         System.out.println("\nInsira Opção:");
     }

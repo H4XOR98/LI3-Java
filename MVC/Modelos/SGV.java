@@ -315,18 +315,17 @@ public class SGV implements IGestaoVendasModelos{
     
     // Determinar, para cada filial, a lista dos três maiores compradores em termos de dinheiro facturado.
     
-    public List<String> q7 (){
-        List<String> resultado = new ArrayList();
+    public String q7 (){
+        StringBuilder sb = new StringBuilder();
         Map<String,Integer> clientes;
         int faturado;
-        StringBuilder sb;
         for(int i = 0 ; i < numFiliais; i++){
             clientes = new TreeMap<>();
             faturado = 0;
             for(String codCliente : this.gestaoFilial.getClientes()){
                 for (String codProduto : this.gestaoFilial.getProdutos(codCliente)){
                     for(int j = 0 ; j < numMeses ; j++){
-                        Fatura fatura = this.gestaoFilial.getFatura(codCliente, codProduto, i, j);
+                        Fatura fatura = this.gestaoFilial.getFatura(codCliente, codProduto, j, i);
                         if(clientes.containsKey(codCliente)){
                             faturado = clientes.get(codCliente);
                         }else{
@@ -342,21 +341,21 @@ public class SGV implements IGestaoVendasModelos{
                                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                                    .limit(3)
                                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, HashMap::new));
-            sb = new StringBuilder();    
             sb.append("Filial: " + (i+1) + "\n");
             for(String s : clientes.keySet()){
                 sb.append("\t" + s + ";\n");
             }
-            resultado.add(sb.toString());
         }
-        resultado.clear();
-        return resultado;
+        return sb.toString();
     }
    
     // Determinar os códigos dos X clientes (sendo X dado pelo utilizador) que compraram mais produtos diferentes (não interessa 
     // a quantidade nem o valor), indicando quantos, sendo o critério de ordenação a ordem decrescente do número de produtos.
     
-    public List<String> q8 (int x){
+    public List<String> q8 (int x) throws NumeroInvalidoException{
+        if(x < 0){
+            throw new NumeroInvalidoException("x é menor 0");
+        }
         int totalComprado, i, j;
         boolean comprou = false;
         List<String> resultado = new ArrayList<String>();
@@ -395,7 +394,14 @@ public class SGV implements IGestaoVendasModelos{
     // Dado o código de um produto que deve existir, determinar o conjunto dos X clientes que mais o compraram e, para cada um, 
     // qual o valor gasto.
     
-    public List<String> q9 (String codProduto, int n){
+    public List<String> q9 (String codProduto, int n) throws NumeroInvalidoException, ProdutoNaoExisteException{
+        if(n < 0){
+            throw new NumeroInvalidoException("x é menor 0");
+        }
+        if(!this.gestaoFilial.produtoExiste(codProduto)){
+            throw new ProdutoNaoExisteException(codProduto);
+        }
+        DecimalFormat formatter = new DecimalFormat("#0.00"); 
         List <String> result = new ArrayList<>(n);
         Map <String, Integer> numVendasAux = new HashMap<>();
         Map <String, Double> faturadoAux = new HashMap<>();
@@ -423,16 +429,40 @@ public class SGV implements IGestaoVendasModelos{
             int max = Collections.max(numVendasAux.values());
             for (String codCliente : numVendasAux.keySet()){
                 if (numVendasAux.get(codCliente) == max && numVendasAux.get(codCliente) != 0){
-                    sb.append("Cliente: " + codCliente + " ->  gastou " + faturadoAux.get(codCliente) + "€\n");
+                    sb.append("Cliente: " + codCliente + " ->  gastou " + formatter.format(faturadoAux.get(codCliente)) + "€\n");
                     result.add(i, sb.toString());
                     numVendasAux.remove(codCliente);
                     break;
                 }
             }
         }
+        numVendasAux.clear();
+        faturadoAux.clear();
         return result;
     }
     
+    // Determinar mês a mês, e para cada mês filial a filial, a facturação total com cada produto.
+
+     public List<String> q10(){
+        List<String> aux = new ArrayList<>();
+        DecimalFormat formatter = new DecimalFormat("#0.00"); 
+        for(String codProduto : this.faturacao.getProdutos()){
+            StringBuilder sb = new StringBuilder();
+            sb.append("--------------------- Produto: " + codProduto + " ---------------------\n");
+            for(int i = 0 ; i < numMeses ; i++){
+                sb.append("\t" + Meses.getMes(i) + " : \n");
+                sb.append("\t  Filial:\n");
+                for(int j = 0; j < numFiliais; j++){
+                    Fatura fatura = this.faturacao.getFatura(codProduto, i, j);
+                    double total = fatura.getFaturado();
+                    sb.append("\t   " + (j+1) + " - " + formatter.format(total) + "€;");
+                }
+                sb.append("\n\n");
+            }
+            aux.add(sb.toString());
+        }
+        return aux;
+    }
     
     // --------------------------------------------------------- Queries Estatísticas ------------------------------------------------------- \\
     

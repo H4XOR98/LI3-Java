@@ -19,10 +19,10 @@ public interface IGestaoVendasModelos
     public List<String> q3(String codCliente) throws ClienteNaoExisteException;
     public List<String> q4(String codProd) throws ProdutoNaoExisteException;
     public List<String> q5 (String codCliente) throws ClienteNaoExisteException;
-    /*public List<String> q6 (int x) throws NumeroInvalidoException;
-    public List<String> q7 ();
-    public List<String> q8 (int x);
-    public List<String> q9 (String codProduto, int n);
-    public List<String> q10();*/
+    public List<String> q6 (int x) throws NumeroInvalidoException;
+    public String q7 ();
+    public List<String> q8 (int x) throws NumeroInvalidoException;
+    public List<String> q9 (String codProduto, int n) throws NumeroInvalidoException, ProdutoNaoExisteException;
+    public List<String> q10();
     public String lerFicheiros() throws FileNotFoundException;
 }

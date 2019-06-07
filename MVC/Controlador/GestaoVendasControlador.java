@@ -17,6 +17,7 @@ import MVC.Vista.MenuOpcoes;
 import MVC.Vista.Listagem;
 import MVC.Modelos.Catalogos.ClienteNaoExisteException;
 import MVC.Modelos.Catalogos.ProdutoNaoExisteException;
+import MVC.Modelos.Catalogos.NumeroInvalidoException;
 /**
  * Escreva a descrição da classe GestaoVendasControlador aqui.
  * 
@@ -100,15 +101,15 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
                          break;
                 case 5 : this.q5();
                          break;
-                case 6 : 
+                case 6 : this.q6();
                          break;
-                case 7 : 
+                case 7 : this.q7();
                          break;
-                case 8 : 
+                case 8 : this.q8();
                          break;
-                case 9 : 
+                case 9 : this.q9();
                          break;
-                case 10 : 
+                case 10 : this.q10();
                          break;
                 default : setVista(new VistaErro());
                           vista.show();
@@ -141,10 +142,11 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
                         if(pagina >= vista.getNumPaginas()) pagina = vista.getNumPaginas() - 1;
                         vista.show(pagina);
                         break;
-                case 3: setVista(new ListagemSimples("\n\nQual a página?"));
+                case 3: int elem = vista.getNumPaginas();
+                        setVista(new ListagemSimples("\n\nQual a página?"));
                         vista.show();
                         paginaOP = Input.lerInt();
-                        if(paginaOP < 0 || paginaOP > vista.getNumPaginas()){
+                        if(paginaOP < 0 || paginaOP > elem){
                             setVista(new VistaErro());
                             vista.show();
                             Input.lerString();
@@ -232,10 +234,11 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
                             if(pagina >= vista.getNumPaginas()) pagina = vista.getNumPaginas() - 1;
                             vista.show(pagina);
                             break;
-                    case 3: setVista(new ListagemSimples("\n\nQual a página?"));
+                    case 3: int elem = vista.getNumPaginas();
+                            setVista(new ListagemSimples("\n\nQual a página?"));
                             vista.show();
                             paginaOP = Input.lerInt();
-                            if(paginaOP < 0 || paginaOP > vista.getNumPaginas()){
+                            if(paginaOP < 0 || paginaOP > elem){
                                 setVista(new VistaErro());
                                 vista.show();
                                 Input.lerString();
@@ -289,10 +292,11 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
                             if(pagina >= vista.getNumPaginas()) pagina = vista.getNumPaginas() - 1;
                             vista.show(pagina);
                             break;
-                    case 3: setVista(new ListagemSimples("\n\nQual a página?"));
+                    case 3: int elem = vista.getNumPaginas();
+                            setVista(new ListagemSimples("\n\nQual a página?"));
                             vista.show();
                             paginaOP = Input.lerInt();
-                            if(paginaOP < 0 || paginaOP > vista.getNumPaginas()){
+                            if(paginaOP < 0 || paginaOP > elem){
                                 setVista(new VistaErro());
                                 vista.show();
                                 Input.lerString();
@@ -347,10 +351,11 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
                             if(pagina >= vista.getNumPaginas()) pagina = vista.getNumPaginas() - 1;
                             vista.show(pagina);
                             break;
-                    case 3: setVista(new ListagemSimples("\n\nQual a página?"));
+                    case 3: int elem = vista.getNumPaginas();
+                            setVista(new ListagemSimples("\n\nQual a página?"));
                             vista.show();
                             paginaOP = Input.lerInt();
-                            if(paginaOP < 0 || paginaOP > vista.getNumPaginas()){
+                            if(paginaOP < 0 || paginaOP > elem){
                                 setVista(new VistaErro());
                                 vista.show();
                                 Input.lerString();
@@ -380,4 +385,252 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
             setVista(new MenuConsultasInterativas());
         }
     }
+    
+    
+    private void q6 (){
+        String titulo = "------- TOP de produtos ano e número de clientes que os compraram -------";
+        int opcao = 0;
+        int pagina = 0;
+        int paginaOP = 0;
+        setVista(new Listagem(titulo,"Introduza um número."));
+        vista.show();
+        int escolha = Input.lerInt();
+        try{
+            List<String> l = this.modelos.q6(escolha);
+            setVista(new ListagemLista(titulo, l));
+            do {
+                vista.show(pagina);
+                opcao = Input.lerInt();
+                switch(opcao) {
+                    case 1: pagina -= 1;
+                            if(pagina < 0) pagina = 0;
+                            vista.show(pagina);
+                            break;
+                    case 2: pagina += 1;
+                            if(pagina >= vista.getNumPaginas()) pagina = vista.getNumPaginas() - 1;
+                            vista.show(pagina);
+                            break;
+                    case 3: int elem = vista.getNumPaginas();
+                            setVista(new ListagemSimples("\n\nQual a página?"));
+                            vista.show();
+                            paginaOP = Input.lerInt();
+                            if(paginaOP < 0 || paginaOP > elem){
+                                setVista(new VistaErro());
+                                vista.show();
+                                Input.lerString();
+                            }else{
+                                pagina = paginaOP-1;
+                            }
+                            setVista(new ListagemLista(titulo, l));
+                            vista.show(pagina);
+                            break;
+                    case 0: setVista(new ListagemSimples("\n\n\nPressione 'Enter' para retroceder."));
+                            vista.show();
+                            Input.lerString();
+                            setVista(new MenuConsultasInterativas());
+                            break;
+                    default: setVista(new VistaErro());
+                             vista.show();
+                             Input.lerString();
+                             setVista(new ListagemLista(titulo, l));
+                             break;
+                }
+            }while(opcao != 0);
+            l.clear();
+        }catch(NumeroInvalidoException e){
+            setVista(new ListagemSimples("\fO número " + e.getMessage() + " não satisafaz os requisitos.\n\nPara Prosseguir pressione 'Enter'."));
+            vista.show();
+            Input.lerString();
+            setVista(new MenuConsultasInterativas());
+        }
+    }
+    
+    
+    private void q7 (){
+        String titulo = "------- TOP 3 maiores compradores filial a filial -------";
+        String s = this.modelos.q7();
+        setVista(new Listagem(titulo, s));
+        vista.show();
+        setVista(new ListagemSimples("\n\n\nPressione 'Enter' para retroceder."));
+        vista.show();
+        Input.lerString();
+        setVista(new MenuConsultasInterativas());
+    }
+    
+    
+    private void q8(){
+        String titulo = "------- TOP n maiores compradores de produtos distintos -------";
+        int opcao = 0;
+        int pagina = 0;
+        int paginaOP = 0;
+        setVista(new Listagem(titulo,"Introduza o número de produtos que pretende."));
+        vista.show();
+        int escolha = Input.lerInt();
+        try{
+            List<String> l = this.modelos.q8(escolha);
+            setVista(new ListagemLista(titulo, l));
+            do {
+                vista.show(pagina);
+                opcao = Input.lerInt();
+                switch(opcao) {
+                    case 1: pagina -= 1;
+                            if(pagina < 0) pagina = 0;
+                            vista.show(pagina);
+                            break;
+                    case 2: pagina += 1;
+                            if(pagina >= vista.getNumPaginas()) pagina = vista.getNumPaginas() - 1;
+                            vista.show(pagina);
+                            break;
+                    case 3: int elem = vista.getNumPaginas();
+                            setVista(new ListagemSimples("\n\nQual a página?"));
+                            vista.show();
+                            paginaOP = Input.lerInt();
+                            if(paginaOP < 0 || paginaOP > elem){
+                                setVista(new VistaErro());
+                                vista.show();
+                                Input.lerString();
+                            }else{
+                                pagina = paginaOP-1;
+                            }
+                            setVista(new ListagemLista(titulo, l));
+                            vista.show(pagina);
+                            break;
+                    case 0: setVista(new ListagemSimples("\n\n\nPressione 'Enter' para retroceder."));
+                            vista.show();
+                            Input.lerString();
+                            setVista(new MenuConsultasInterativas());
+                            break;
+                    default: setVista(new VistaErro());
+                             vista.show();
+                             Input.lerString();
+                             setVista(new ListagemLista(titulo, l));
+                             break;
+                }
+            }while(opcao != 0);
+            l.clear();
+        }catch(NumeroInvalidoException e){
+            setVista(new ListagemSimples("\fO número " + e.getMessage() + " não satisafaz os requisitos.\n\nPara Prosseguir pressione 'Enter'."));
+            vista.show();
+            Input.lerString();
+            setVista(new MenuConsultasInterativas());
+        }
+    }
+    
+    
+    private void q9() {
+        String titulo = "------- TOP n clientes que compraram um determinado produto -------";
+        int opcao = 0;
+        int pagina = 0;
+        int paginaOP = 0;
+        setVista(new Listagem(titulo,"Introduza o código de um produto."));
+        vista.show();
+        String escolha = Input.lerString();
+        setVista(new Listagem(titulo,"Introduza o número de clientes que pretende listar."));
+        vista.show();
+        int n = Input.lerInt();
+        try{
+            List<String> l = this.modelos.q9(escolha,n);
+            setVista(new ListagemLista(titulo, l));
+            do {
+                vista.show(pagina);
+                opcao = Input.lerInt();
+                switch(opcao) {
+                    case 1: pagina -= 1;
+                            if(pagina < 0) pagina = 0;
+                            vista.show(pagina);
+                            break;
+                    case 2: pagina += 1;
+                            if(pagina >= vista.getNumPaginas()) pagina = vista.getNumPaginas() - 1;
+                            vista.show(pagina);
+                            break;
+                    case 3: int elem = vista.getNumPaginas();
+                            setVista(new ListagemSimples("\n\nQual a página?"));
+                            vista.show();
+                            paginaOP = Input.lerInt();
+                            if(paginaOP < 0 || paginaOP > elem){
+                                setVista(new VistaErro());
+                                vista.show();
+                                Input.lerString();
+                            }else{
+                                pagina = paginaOP-1;
+                            }
+                            setVista(new ListagemLista(titulo, l));
+                            vista.show(pagina);
+                            break;
+                    case 0: setVista(new ListagemSimples("\n\n\nPressione 'Enter' para retroceder."));
+                            vista.show();
+                            Input.lerString();
+                            setVista(new MenuConsultasInterativas());
+                            break;
+                    default: setVista(new VistaErro());
+                             vista.show();
+                             Input.lerString();
+                             setVista(new ListagemLista(titulo, l));
+                             break;
+                }
+            }while(opcao != 0);
+            l.clear();
+        }catch(NumeroInvalidoException e){
+            setVista(new ListagemSimples("\fO número " + e.getMessage() + " não satisafaz os requisitos.\n\nPara Prosseguir pressione 'Enter'."));
+            vista.show();
+            Input.lerString();
+            setVista(new MenuConsultasInterativas());
+        }catch(ProdutoNaoExisteException e){
+            setVista(new ListagemSimples("\fNão existe nenhum produto com o código " + e.getMessage() + ".\n\nPara Prosseguir pressione 'Enter'."));
+            vista.show();
+            Input.lerString();
+            setVista(new MenuConsultasInterativas());
+        }
+    }
+    
+    
+    private void q10() {
+        String titulo = "------- Faturação total de cada produto, mês a mês, filial a filial -------";
+        int opcao = 0;
+        int pagina = 0;
+        int paginaOP = 0;
+        List<String> l = this.modelos.q10();
+        setVista(new ListagemLista(titulo, l));
+        do {
+            vista.show(pagina);
+            opcao = Input.lerInt();
+            switch(opcao) {
+                case 1 : pagina -= 1;
+                         if(pagina < 0) pagina = 0;
+                         vista.show(pagina);
+                         break;
+                case 2:
+                        pagina += 1;
+                        if(pagina >= vista.getNumPaginas()) pagina = vista.getNumPaginas() - 1;
+                        vista.show(pagina);
+                        break;
+                case 3: int elem = vista.getNumPaginas();
+                        setVista(new ListagemSimples("\n\nQual a página?"));
+                        vista.show();
+                        paginaOP = Input.lerInt();
+                        if(paginaOP < 0 || paginaOP > elem){
+                            setVista(new VistaErro());
+                            vista.show();
+                            Input.lerString();
+                        }else{
+                             pagina = paginaOP-1;
+                        }
+                        setVista(new ListagemLista(titulo, l));
+                        vista.show(pagina);
+                        break;
+                case 0: setVista(new ListagemSimples("\n\n\nPressione 'Enter' para retroceder."));
+                        vista.show();
+                        Input.lerString();
+                        setVista(new MenuConsultasInterativas());
+                        break;
+                default: setVista(new VistaErro());
+                         vista.show();
+                         Input.lerString();
+                         setVista(new ListagemLista(titulo, l));
+                    break;
+            }
+        }while(opcao != 0);
+        l.clear();
+    }
+    
 }
