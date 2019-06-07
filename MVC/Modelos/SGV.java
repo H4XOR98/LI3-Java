@@ -466,7 +466,27 @@ public class SGV implements IGestaoVendasModelos{
     
     // --------------------------------------------------------- Queries Estatísticas ------------------------------------------------------- \\
     
-    
+    // Número total de compras por mês
+
+    public String numTotalVendasMes(){
+        StringBuilder sb = new StringBuilder();
+        int total = 0;
+        for(int i = 0;  i < numMeses ; i++){
+            total = 0;
+            for(String codCliente : this.gestaoFilial.getClientes()){
+                for(String codProduto : this.gestaoFilial.getProdutos(codCliente)){
+                    for(int j = 0; j < numFiliais ; j++){
+                        Fatura fatura = this.gestaoFilial.getFatura(codCliente, codProduto, i, j);
+                        if (fatura!=null){
+                            total += fatura.getQuantidade();
+                        }
+                    }
+                }
+            }
+            sb.append("Numero de vendas em " + Meses.getMes(i) + " foram " + total + ".\n");
+        }
+        return sb.toString();
+    }
     
         
     
