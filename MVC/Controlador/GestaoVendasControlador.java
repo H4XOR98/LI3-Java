@@ -69,7 +69,7 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
                 case 0 : break;
                 case 1 : this.numTotalVendasMes();
                          break;
-                case 2 : 
+                case 2 : this.vendasGlobalFilial();
                          break;
                 case 3 : 
                          break;
@@ -638,6 +638,17 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
     private void numTotalVendasMes(){
         String titulo = "------- Número total de compras por mês -------";
         String s = this.modelos.numTotalVendasMes();
+        setVista(new Listagem(titulo, s));
+        vista.show();
+        setVista(new ListagemSimples("\n\n\nPressione 'Enter' para retroceder."));
+        vista.show();
+        Input.lerString();
+        setVista(new MenuConsultasEstatisticas());
+    }
+    
+    private void vendasGlobalFilial(){
+        String titulo = "------- Faturação total por mês, filial a filial e global -------";
+        String s = this.modelos.vendasGlobalFilial();
         setVista(new Listagem(titulo, s));
         vista.show();
         setVista(new ListagemSimples("\n\n\nPressione 'Enter' para retroceder."));

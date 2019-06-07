@@ -25,5 +25,6 @@ public interface IGestaoVendasModelos
     public List<String> q9 (String codProduto, int n) throws NumeroInvalidoException, ProdutoNaoExisteException;
     public List<String> q10();
     public String numTotalVendasMes();
+    public String vendasGlobalFilial();
     public String lerFicheiros() throws FileNotFoundException;
 }

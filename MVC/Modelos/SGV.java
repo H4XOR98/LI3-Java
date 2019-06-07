@@ -488,7 +488,29 @@ public class SGV implements IGestaoVendasModelos{
         return sb.toString();
     }
     
-        
+    // Facturação total por mês (valor total das compras/vendas) para cada filial e o valor total global.
+
+    public String vendasGlobalFilial(){
+        StringBuilder sb = new StringBuilder();
+        int numVendasMes, numVendasFilial, numVendasGlobal = 0;
+        for (int i = 0; i < numMeses; i++){
+            sb.append(Meses.getMes(i) + ":\n");
+            numVendasMes = 0;
+            for (int j = 0; j < numFiliais; j++){
+                numVendasFilial = 0;
+                for (String codProduto : this.faturacao.getProdutos()){
+                    Fatura fatura = this.faturacao.getFatura(codProduto, i, j);
+                    numVendasFilial += fatura.getQuantidade();
+                }
+                numVendasMes += numVendasFilial;
+                sb.append("Filial " + (j+1) + ": " + numVendasFilial + " vendas.\n"); 
+            }
+            numVendasGlobal += numVendasMes;
+            sb.append("" + numVendasMes + " vendas no mês.\n\n\n");
+        }
+        sb.append("----------- Vendas Globais -----------\n           " + numVendasGlobal + " vendas\n--------------------------------------\n");
+        return sb.toString();
+    }    
     
     
 }
