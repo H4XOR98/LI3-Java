@@ -16,6 +16,7 @@ import MVC.Vista.ListagemSimples;
 import MVC.Vista.MenuOpcoes;
 import MVC.Vista.Listagem;
 import MVC.Modelos.Catalogos.ClienteNaoExisteException;
+import MVC.Modelos.Catalogos.ProdutoNaoExisteException;
 /**
  * Escreva a descrição da classe GestaoVendasControlador aqui.
  * 
@@ -95,9 +96,9 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
                          break;
                 case 3 : this.q3();
                          break;
-                case 4 : 
+                case 4 : this.q4();
                          break;
-                case 5 : 
+                case 5 : this.q5();
                          break;
                 case 6 : 
                          break;
@@ -198,9 +199,6 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
                 if(mes < 1 || mes > 12){
                     setVista(new VistaErro());
                     vista.show();
-                    setVista(new ListagemSimples("Pressione 'Enter' para retroceder."));
-                    vista.show();
-                    Input.lerString();
                     setVista(new MenuOpcoes());
                 }else{
                     s = this.modelos.q2(mes-1,opcao);
@@ -248,6 +246,121 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
                             vista.show(pagina);
                             break;
                     case 0: setVista(new ListagemSimples("\n\n\nPressione 'Enter' para retroceder."));
+                            vista.show();
+                            Input.lerString();
+                            setVista(new MenuConsultasInterativas());
+                            break;
+                    default: setVista(new VistaErro());
+                             vista.show();
+                             Input.lerString();
+                             setVista(new ListagemLista(titulo, l));
+                             break;
+                }
+            }while(opcao != 0);
+            l.clear();
+        }catch(ClienteNaoExisteException e){
+            setVista(new ListagemSimples("\fNão existe nenhum cliente com o código " + e.getMessage() + ".\n\nPara Prosseguir pressione 'Enter'."));
+            vista.show();
+            Input.lerString();
+            setVista(new MenuConsultasInterativas());
+        }
+    }
+    
+    public void q4 (){
+        String titulo = "------- Dados refentes às vendas de um produto -------";
+        int opcao = 0;
+        int pagina = 0;
+        int paginaOP = 0;
+        setVista(new Listagem(titulo,"Introduza um código de produto."));
+        vista.show();
+        String codProd = Input.lerString();
+        try{
+            List<String> l = this.modelos.q4(codProd);
+            setVista(new ListagemLista(titulo, l));
+            do {
+                vista.show(pagina);
+                opcao = Input.lerInt();
+                switch(opcao) {
+                    case 1: pagina -= 1;
+                            if(pagina < 0) pagina = 0;
+                            vista.show(pagina);
+                            break;
+                    case 2: pagina += 1;
+                            if(pagina >= vista.getNumPaginas()) pagina = vista.getNumPaginas() - 1;
+                            vista.show(pagina);
+                            break;
+                    case 3: setVista(new ListagemSimples("\n\nQual a página?"));
+                            vista.show();
+                            paginaOP = Input.lerInt();
+                            if(paginaOP < 0 || paginaOP > vista.getNumPaginas()){
+                                setVista(new VistaErro());
+                                vista.show();
+                                Input.lerString();
+                            }else{
+                                pagina = paginaOP-1;
+                            }
+                            setVista(new ListagemLista(titulo, l));
+                            vista.show(pagina);
+                            break;
+                    case 0: setVista(new ListagemSimples("\n\n\nPressione 'Enter' para retroceder."));
+                            vista.show();
+                            Input.lerString();
+                            setVista(new MenuConsultasInterativas());
+                            break;
+                    default: setVista(new VistaErro());
+                             vista.show();
+                             Input.lerString();
+                             setVista(new ListagemLista(titulo, l));
+                             break;
+                }
+            }while(opcao != 0);
+            l.clear();
+        }catch(ProdutoNaoExisteException e){
+            setVista(new ListagemSimples("\fNão existe nenhum produto com o código " + e.getMessage() + ".\n\nPara Prosseguir pressione 'Enter'."));
+            vista.show();
+            Input.lerString();
+            setVista(new MenuConsultasInterativas());
+        }
+    }
+    
+    
+    private void q5 (){
+        String titulo = "------- TOP de produtos que um cliente comprou -------";
+        int opcao = 0;
+        int pagina = 0;
+        int paginaOP = 0;
+        setVista(new Listagem(titulo,"Introduza um código de cliente."));
+        vista.show();
+        String codCli = Input.lerString();
+        try{
+            List<String> l = this.modelos.q5(codCli);
+            setVista(new ListagemLista(titulo, l));
+            do {
+                vista.show(pagina);
+                opcao = Input.lerInt();
+                switch(opcao) {
+                    case 1: pagina -= 1;
+                            if(pagina < 0) pagina = 0;
+                            vista.show(pagina);
+                            break;
+                    case 2: pagina += 1;
+                            if(pagina >= vista.getNumPaginas()) pagina = vista.getNumPaginas() - 1;
+                            vista.show(pagina);
+                            break;
+                    case 3: setVista(new ListagemSimples("\n\nQual a página?"));
+                            vista.show();
+                            paginaOP = Input.lerInt();
+                            if(paginaOP < 0 || paginaOP > vista.getNumPaginas()){
+                                setVista(new VistaErro());
+                                vista.show();
+                                Input.lerString();
+                            }else{
+                                pagina = paginaOP-1;
+                            }
+                            setVista(new ListagemLista(titulo, l));
+                            vista.show(pagina);
+                            break;
+                    case 0: setVista(new ListagemSimples("\n\nO cliente com o código " + codCli + " comprou  "+ l.size() +" produtos.\n\n\nPressione 'Enter' para retroceder."));
                             vista.show();
                             Input.lerString();
                             setVista(new MenuConsultasInterativas());

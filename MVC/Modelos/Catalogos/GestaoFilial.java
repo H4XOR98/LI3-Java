@@ -188,6 +188,17 @@ public class GestaoFilial{
         return this.gestaoFilial.get(codCliente).containsKey(codProduto);
     }
     
+    public boolean produtoExiste(String codProduto){
+        for(String codCli : this.gestaoFilial.keySet()){
+            Map <String, Matriz> produtos = this.gestaoFilial.get(codCli);
+            for(String codProd : produtos.keySet()){
+                if(codProd.equals(codProduto)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     
 
     

@@ -198,11 +198,15 @@ public class SGV implements IGestaoVendasModelos{
     // Dado o código de um produto existente, determinar, mês a mês, quantas vezes foi comprado, por quantos clientes diferentes e 
     // o total facturado.
     
-    public List<String> q4 (String codProduto){
+    public List<String> q4 (String codProduto) throws ProdutoNaoExisteException{
         int numClientes = 0;
         int numVendas = 0;
         double totalFaturado = 0;
         int mes = 0; 
+        DecimalFormat formatter = new DecimalFormat("#0.00"); 
+        if(!this.gestaoFilial.produtoExiste(codProduto)){
+            throw new ProdutoNaoExisteException(codProduto);
+        }
         List<String> resultado = new ArrayList<>();
         resultado.add("--------------------- Produto: " + codProduto + " ---------------------\n");
         for(int i = 0 ; i < numMeses ; i++){
@@ -224,7 +228,7 @@ public class SGV implements IGestaoVendasModelos{
                 }
             }
             sb.append("\t   Número de Vendas: " + numVendas + ";\n");
-            sb.append("\t   Total Faturado: " + totalFaturado + ";\n");
+            sb.append("\t   Total Faturado: " + formatter.format(totalFaturado) + ";\n");
             sb.append("\t   Número de clientes diferentes " + numClientes + ";\n\n");
             resultado.add(sb.toString());
         }
@@ -254,7 +258,6 @@ public class SGV implements IGestaoVendasModelos{
             }
             resultadoMap.put((String)codProduto,(Fatura)faturaAux);
         }
-        resultado.add("O cliente com o código " + codCliente + " comprou " + this.gestaoFilial.getProdutos(codCliente).size() + " .\n\n");
         for(String s : resultadoMap.keySet()){
             resultado.add(s);
         }

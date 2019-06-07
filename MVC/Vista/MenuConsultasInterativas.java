@@ -16,8 +16,8 @@ public class MenuConsultasInterativas implements IGestaoVendasVista
         System.out.println("------------------------------ Consultas Interativas ------------------------------\n");
         System.out.println(" 1 - Produtos nunca comprados.");
         System.out.println(" 2 - Número total de vendas realizadas e de clientes distintos que as fizeram.");
-        System.out.println(" 3 - Dados de refentes às compras de um cliente.");
-        System.out.println(" 4 - Dados de refentes às vendas de um produto.");
+        System.out.println(" 3 - Dados refentes às compras de um cliente.");
+        System.out.println(" 4 - Dados refentes às vendas de um produto.");
         System.out.println(" 5 - TOP de produtos que um cliente comprou.");
         System.out.println(" 6 - TOP de produtos ano e número de clientes que os compraram.");
         System.out.println(" 7 - TOP 3 maiores compradores filial a filial");
