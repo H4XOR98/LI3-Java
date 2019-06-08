@@ -2,7 +2,7 @@ package MVC.Modelos.Catalogos;
 
 import MVC.Modelos.ModelosBase.*;
 import MVC.Modelos.Constantes;
-
+import MVC.Modelos.Meses;
 import java.util.Arrays;
 
 public class Matriz{
@@ -18,11 +18,11 @@ public class Matriz{
     
     public Matriz(){
         this.matriz = new Fatura[numMeses][numFiliais];
-        for (int i = 0; i < numMeses; i++){
+        /*for (int i = 0; i < numMeses; i++){
             for (int j = 0; j < numFiliais; j++){
                 matriz[i][j] = new Fatura();
             }
-        }
+        }*/
     }
     
     public Matriz (Fatura[][] matriz){
@@ -91,5 +91,4 @@ public class Matriz{
             }
         }
     }
-    
 }

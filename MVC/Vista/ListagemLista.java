@@ -54,7 +54,7 @@ public class ListagemLista implements IGestaoVendasVista
     
     
     public void show() {
-        System.out.println("\n\nOpção:");
+        System.out.println("\nOpção:");
     }
     
     
@@ -89,7 +89,7 @@ public class ListagemLista implements IGestaoVendasVista
                 System.out.println("*         0 - Sair            *");
                 System.out.println("*******************************");
             }else if(this.paginaAtual+1 == this.numPaginas){
-                System.out.println("\nJá se encontra na última página!\n");
+                System.out.println("Já se encontra na última página!\n");
                 System.out.println("************Navegar************");
                 System.out.println("*         1 - Anterior        *");
                 System.out.println("*         3 - Escolher página *");

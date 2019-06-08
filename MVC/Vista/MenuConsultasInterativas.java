@@ -19,7 +19,7 @@ public class MenuConsultasInterativas implements IGestaoVendasVista
         System.out.println(" 3 - Dados refentes às compras de um cliente.");
         System.out.println(" 4 - Dados refentes às vendas de um produto.");
         System.out.println(" 5 - TOP de produtos que um cliente comprou.");
-        System.out.println(" 6 - TOP de produtos ano e número de clientes que os compraram.");
+        System.out.println(" 6 - TOP de produtos e número de clientes que os compraram.");
         System.out.println(" 7 - TOP 3 maiores compradores filial a filial");
         System.out.println(" 8 - TOP n maiores compradores de produtos distintos.");
         System.out.println(" 9 - TOP n clientes que compraram um determinado produto.");

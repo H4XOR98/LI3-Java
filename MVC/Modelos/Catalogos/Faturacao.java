@@ -6,7 +6,8 @@ import MVC.Modelos.Constantes;
 import java.io.Serializable;
 import java.util.*;
 import java.text.DecimalFormat;
-
+import MVC.Exceptions.ProdutoJaExisteException;
+import MVC.Modelos.Meses;
 
 public class Faturacao implements Serializable, IFaturacao{
     
@@ -54,19 +55,6 @@ public class Faturacao implements Serializable, IFaturacao{
         return faturasAux;
     }
     
-    // Cria Faturas
-    
-    /*private List<List<Fatura>> criaFaturas(){
-        List<List<Fatura>> meses = new ArrayList<>(numeroMeses);
-        for(int i = 0 ; i < numeroMeses ; i++){
-            List<Fatura> filiais = new ArrayList<>(numeroFiliais);
-            for(int j = 0 ; j < numeroFiliais ; j++){
-                filiais.add(j,new Fatura());
-            }
-            meses.add(i,filiais);
-        }
-        return meses;
-    }*/
     
     public void insereProduto(String produto) throws ProdutoJaExisteException{
         if(this.faturas.containsKey(produto)){
@@ -137,32 +125,4 @@ public class Faturacao implements Serializable, IFaturacao{
     public int size(){
         return this.faturas.size();
     }
-    
-    
-    
-    
-    
-    /*
-    
-    //Querie 10
-    public List<String> q10(){
-        List<String> aux = new ArrayList<>();
-        DecimalFormat formatter = new DecimalFormat("#0.00"); 
-        for(String codProduto : this.faturas.keySet()){
-            StringBuilder sb = new StringBuilder();
-            sb.append("--------------------- Produto: " + codProduto + " ---------------------\n");
-            for(int i = 0 ; i < numeroMeses ; i++){
-                sb.append("\t" + Meses.getMes(i) + " : \n");
-                sb.append("\t  Filial:\n");
-                for(int j = 0; j < numeroFiliais; j++){
-                    Fatura fatura = this.faturas.get(codProduto).get(i).get(j);
-                    double total = fatura.getFaturado();
-                    sb.append("\t   " + (j+1) + " - " + formatter.format(total) + "€;");
-                }
-                sb.append("\n\n");
-            }
-            aux.add(sb.toString());
-        }
-        return aux;
-    }*/
 }

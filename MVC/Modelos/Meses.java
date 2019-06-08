@@ -1,4 +1,4 @@
-package MVC.Modelos.Catalogos;
+package MVC.Modelos;
 
 
 /**

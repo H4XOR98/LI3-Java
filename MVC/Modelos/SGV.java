@@ -1,4 +1,4 @@
-package MVC.Modelos;
+ package MVC.Modelos;
 
 import java.util.InputMismatchException;
 import java.lang.NumberFormatException;
@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.text.DecimalFormat;
 import java.io.FileNotFoundException;
+import MVC.Modelos.Meses;
+import MVC.Exceptions.*;
 
 public class SGV implements IGestaoVendasModelos{
     
@@ -43,10 +45,7 @@ public class SGV implements IGestaoVendasModelos{
     
     // -------------------------------------------------------------- Leitura -------------------------------------------------------------- \\
     
-    public String lerFicheiros() throws FileNotFoundException{
-        
-        StringBuilder sb = new StringBuilder();
-        sb.append("Ficheiro de vendas: " + Constantes.ficheiroVendas + "\n");
+    public void lerFicheiros(String titulo) throws FileNotFoundException{
         Leitura leitura;
         
         leitura = new Leitura(Constantes.ficheiroClientes);
@@ -57,7 +56,7 @@ public class SGV implements IGestaoVendasModelos{
         Collection<String> produtos = leitura.readFilesWithIO();
         this.catProdutos.validaProdutos(produtos);
         
-        leitura = new Leitura(Constantes.ficheiroVendas);
+        leitura = new Leitura("./" + titulo + ".txt");
         Collection<String> vendasLidas = leitura.readFilesWithIO();
         
         for (String p : produtos){
@@ -67,9 +66,6 @@ public class SGV implements IGestaoVendasModelos{
                 System.out.println(e.getMessage());
             }
         }
-        
-        sb.append("Total de clientes: " + clientes.size() + "\n");
-        sb.append("Total de produtos: " + produtos.size() + "\n");
         
         
         clientes.clear();
@@ -85,12 +81,10 @@ public class SGV implements IGestaoVendasModelos{
                 }
             }
         }
-        sb.append("Vendas erradas: " + (vendasLidas.size() - vendas.size()) + "\n");
         vendasLidas.clear();
         this.faturacao.adicionaVendas(vendas);
         this.gestaoFilial.adicionaVendas(vendas);
         vendas.clear();
-        return sb.toString();
     }
         
     // --------------------------------------------------------- Queries Interativas -------------------------------------------------------- \\
@@ -108,7 +102,7 @@ public class SGV implements IGestaoVendasModelos{
             for(int i = 0 ; i < numMeses && !repetido ; i++){
                 for(int j = 0; j < numFiliais && !repetido ; j++){
                     fatura = this.faturacao.getFatura(codProduto,i,j);
-                    if(!fatura.faturaVazia()){
+                    if(!fatura.faturaVazia() && fatura != null){
                         repetido = true;
                     }
                 }
@@ -125,8 +119,7 @@ public class SGV implements IGestaoVendasModelos{
     // Dado um mês válido, determinar o número total global de vendas realizadas e o número total de clientes distintos que as fizeram; 
     // Fazer o mesmo mas para cada uma das filiais.
     
-    public String q2 (int mes, int opcao){
-        int numTotalVendas = 0, numTotalClientes = 0;
+    public String q2F (int mes){
         int numVendasFilial1 = 0, numVendasFilial2 = 0, numVendasFilial3 = 0;
         int numClienteFilial1 = 0, numClienteFilial2 = 0, numClienteFilial3 = 0;
         boolean clienteComprou, clienteComprouFilial1, clienteComprouFilial2, clienteComprouFilial3;
@@ -135,34 +128,50 @@ public class SGV implements IGestaoVendasModelos{
             for (String codProduto : this.gestaoFilial.getProdutos(codCliente)){
                 for(int j = 0; j<numFiliais ; j++){
                     Fatura fatura = this.gestaoFilial.getFatura(codCliente, codProduto, mes, j);
-                    if (j == 0) {numVendasFilial1 += fatura.getQuantidade(); if (fatura.getQuantidade()>0) clienteComprouFilial1 = true;}
-                    if (j == 1) {numVendasFilial2 += fatura.getQuantidade(); if (fatura.getQuantidade()>0) clienteComprouFilial2 = true;}
-                    if (j == 2) {numVendasFilial3 += fatura.getQuantidade(); if (fatura.getQuantidade()>0) clienteComprouFilial3 = true;}
-                    numTotalVendas += fatura.getQuantidade();
-                    if(fatura.getQuantidade()>0) clienteComprou = true;
+                    if(fatura != null){
+                        if (j == 0) {numVendasFilial1 += fatura.getQuantidade(); if (fatura.getQuantidade()>0) clienteComprouFilial1 = true;}
+                        if (j == 1) {numVendasFilial2 += fatura.getQuantidade(); if (fatura.getQuantidade()>0) clienteComprouFilial2 = true;}
+                        if (j == 2) {numVendasFilial3 += fatura.getQuantidade(); if (fatura.getQuantidade()>0) clienteComprouFilial3 = true;}
+                        if(fatura.getQuantidade()>0) clienteComprou = true;
+                    }
                 }
             }
-            if (clienteComprou == true) numTotalClientes += 1;
             if (clienteComprouFilial1 == true) numClienteFilial1 += 1;
             if (clienteComprouFilial2 == true) numClienteFilial2 += 1;
             if (clienteComprouFilial3 == true) numClienteFilial3 += 1;
         }
         StringBuilder sb = new StringBuilder();
-        if (opcao == 1){
-            sb.append("Número total de vendas: "+ numTotalVendas + "\n");
-            sb.append("Número total de clientes que compraram no mês " + mes + ": " + numTotalClientes + "\n");
-        }
-        if (opcao == 2){
-            sb.append("Número de vendas na filial 1, no mês " + mes + ": " + numVendasFilial1 + "\n");
-            sb.append("Número de vendas na filial 2, no mês " + mes + ": "  +numVendasFilial2 + "\n");
-            sb.append("Número de vendas na filial 3, no mês " + mes + ": " + numVendasFilial3 + "\n");
-            sb.append("Número de clientes que compraram na filial 1, no mês " + mes + ": " + numClienteFilial1 + "\n");
-            sb.append("Número de clientes que compraram na filial 2, no mês " + mes + ": " + numClienteFilial2 + "\n");
-            sb.append("Número de clientes que compraram na filial 3, no mês " + mes + ": " + numClienteFilial3 + "\n");
-        }
+        sb.append(Meses.getMes(mes) + ":\n\n");
+        sb.append("\tFilial 1: " + numVendasFilial1 + " vendas; \n\t\t  " + numClienteFilial1 + " clientes." +"\n\n");
+        sb.append("\tFilial 2: " + numVendasFilial2 + " vendas; \n\t\t  " + numClienteFilial2 + " clientes." +"\n\n");
+        sb.append("\tFilial 3: " + numVendasFilial3 + " vendas; \n\t\t  " + numClienteFilial3 + " clientes." +"\n\n");
         return sb.toString();
     }
     
+    public String q2G(int mes){
+        boolean clienteComprou;
+        int numTotalVendas = 0, numTotalClientes = 0;
+        for(String codCliente : this.gestaoFilial.getClientes()){
+            clienteComprou = false;
+            for (String codProduto : this.gestaoFilial.getProdutos(codCliente)){
+                for(int j = 0; j<numFiliais ; j++){
+                    Fatura fatura = this.gestaoFilial.getFatura(codCliente, codProduto, mes, j);
+                    if(fatura != null){
+                        numTotalVendas += fatura.getQuantidade();
+                        if(fatura.getQuantidade() > 0){
+                            clienteComprou = true;
+                        }
+                    }
+                }
+            }
+            if (clienteComprou == true) numTotalClientes += 1;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(Meses.getMes(mes) + ":\n");
+        sb.append("\tNúmero total de vendas: "+ numTotalVendas + ";\n");
+        sb.append("\tNúmero total de clientes: " + numTotalClientes + ".\n");
+        return sb.toString();
+    }
     // Dado um código de cliente, determinar, para cada mês, quantas compras fez, quantos produtos distintos comprou e quanto gastou no total.
              
     public List<String> q3 (String codCliente) throws ClienteNaoExisteException{
@@ -182,8 +191,10 @@ public class SGV implements IGestaoVendasModelos{
             for (String codProduto : this.gestaoFilial.getProdutos(codCliente)){
                 for (int j = 0; j < numFiliais; j++){
                     Fatura fatura = this.gestaoFilial.getFatura(codCliente, codProduto, i, j);
-                    numVendas += fatura.getQuantidade();
-                    faturado += fatura.getFaturado();
+                    if(fatura != null){
+                        numVendas += fatura.getQuantidade();
+                        faturado += fatura.getFaturado();
+                    }
                 }
                 if (numVendas > 0) numProdutos++;
             }
@@ -219,10 +230,12 @@ public class SGV implements IGestaoVendasModelos{
                 if(this.gestaoFilial.produtoExiste(codCliente, codProduto)){
                     for(int j = 0; j < numFiliais ; j++){
                         Fatura fatura = this.gestaoFilial.getFatura(codCliente, codProduto, i, j);
-                        numVendas += fatura.getQuantidade();
-                        totalFaturado += fatura.getFaturado();
-                        if(!fatura.faturaVazia()){
-                            numClientes++;
+                        if(fatura != null){
+                            numVendas += fatura.getQuantidade();
+                            totalFaturado += fatura.getFaturado();
+                            if(!fatura.faturaVazia()){
+                                numClientes++;
+                            }
                         }
                     }
                 }
@@ -239,28 +252,33 @@ public class SGV implements IGestaoVendasModelos{
     // de quantidade e, para quantidades iguais, por ordem alfabética dos códigos.
     // Comparador mal definido
     
-    Comparator<String> comparaGestao = (a,b) -> a.compareTo(b);
-                                     
     public List<String> q5 (String codCliente) throws ClienteNaoExisteException{
         if(!this.gestaoFilial.clienteExiste(codCliente)){
             throw new ClienteNaoExisteException(codCliente);
         }
         List<String> resultado = new ArrayList<>();
-        Map <String,Fatura> resultadoMap = new TreeMap(comparaGestao);
+        Map <String,Integer> resultadoMap = new TreeMap();
+        int n = 0;
         for(String codProduto : this.gestaoFilial.getProdutos(codCliente)){
-            Fatura faturaAux = new Fatura();
             for(int i = 0; i < numMeses ; i++){
                 for(int j = 0; j < numFiliais ; j++){
                     Fatura fatura = this.gestaoFilial.getFatura(codCliente, codProduto, i, j);
-                    faturaAux.atualizaFatura(fatura.getQuantidadeN(), fatura.getPrecoN(), "N");
-                    faturaAux.atualizaFatura(fatura.getQuantidadeP(), fatura.getPrecoP(), "P");
+                    if(fatura != null){
+                        if(resultadoMap.containsKey(codProduto)){
+                            n = resultadoMap.get(codProduto);
+                        }else{
+                            n = 0;
+                        }
+                        resultadoMap.put(codProduto,n);
+                    }
                 }
             }
-            resultadoMap.put((String)codProduto,(Fatura)faturaAux);
         }
-        for(String s : resultadoMap.keySet()){
-            resultado.add(s);
-        }
+        
+        resultadoMap = resultadoMap.entrySet().stream()
+                                   .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                                   .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, HashMap::new));
+        resultadoMap.forEach((k,v) -> resultado.add(k));
         resultadoMap.clear();
         return resultado;
     }
@@ -283,13 +301,16 @@ public class SGV implements IGestaoVendasModelos{
                 for(int i = 0; i < numMeses ; i++){
                     for(int j = 0 ; j < numFiliais ; j++){
                         Fatura fatura = this.gestaoFilial.getFatura(codCliente, codProduto, i, j);
-                        if(maisVendidos.containsKey(codProduto)){
-                            quantidade = maisVendidos.get(codProduto);
-                        }else{
-                            quantidade = 0;
+                        if(fatura != null){
+                            if(maisVendidos.containsKey(codProduto)){
+                                quantidade = maisVendidos.get(codProduto);
+                            }else{
+                                quantidade = 0;
+                            }
+                        
+                            quantidade += fatura.getQuantidade();
+                            maisVendidos.put(codProduto,quantidade);
                         }
-                        quantidade += fatura.getQuantidade();
-                        maisVendidos.put(codProduto,quantidade);
                     }
                 }
                 if(clientesDiferentes.containsKey(codProduto)){
@@ -326,12 +347,14 @@ public class SGV implements IGestaoVendasModelos{
                 for (String codProduto : this.gestaoFilial.getProdutos(codCliente)){
                     for(int j = 0 ; j < numMeses ; j++){
                         Fatura fatura = this.gestaoFilial.getFatura(codCliente, codProduto, j, i);
-                        if(clientes.containsKey(codCliente)){
-                            faturado = clientes.get(codCliente);
-                        }else{
-                            faturado = 0;
+                        if(fatura != null){
+                            if(clientes.containsKey(codCliente)){
+                                faturado = clientes.get(codCliente);
+                            }else{
+                                faturado = 0;
+                            }
+                            faturado += fatura.getFaturado();
                         }
-                        faturado += fatura.getFaturado();
                     }
                 }
                 clientes.put(codCliente,faturado);
@@ -341,10 +364,11 @@ public class SGV implements IGestaoVendasModelos{
                                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                                    .limit(3)
                                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, HashMap::new));
-            sb.append("Filial: " + (i+1) + "\n");
+            sb.append("Filial " + (i+1) + ":\n");
             for(String s : clientes.keySet()){
                 sb.append("\t" + s + ";\n");
             }
+            sb.append("\n");
         }
         return sb.toString();
     }
@@ -366,7 +390,7 @@ public class SGV implements IGestaoVendasModelos{
                 for(i = 0; i<12 ; i++){
                     for(j = 0; j<numFiliais ; j++){
                         Fatura fatura = this.gestaoFilial.getFatura(codCliente, codProduto, i, j);
-                        if(fatura.getQuantidadeP ()>0 || fatura.getQuantidadeN()>0) comprou = true;
+                        if((fatura.getQuantidadeP ()>0 || fatura.getQuantidadeN()>0) && fatura != null)comprou = true;
                     }
                 }
                 if(comprou == true) totalComprado += 1;
@@ -454,8 +478,10 @@ public class SGV implements IGestaoVendasModelos{
                 sb.append("\t  Filial:\n");
                 for(int j = 0; j < numFiliais; j++){
                     Fatura fatura = this.faturacao.getFatura(codProduto, i, j);
-                    double total = fatura.getFaturado();
-                    sb.append("\t   " + (j+1) + " - " + formatter.format(total) + "€;");
+                    if(fatura != null){
+                        double total = fatura.getFaturado();
+                        sb.append("\t   " + (j+1) + " - " + formatter.format(total) + "€;");
+                    }
                 }
                 sb.append("\n\n");
             }
@@ -488,6 +514,8 @@ public class SGV implements IGestaoVendasModelos{
         return sb.toString();
     }
     
+        
+    
     // Facturação total por mês (valor total das compras/vendas) para cada filial e o valor total global.
 
     public String vendasGlobalFilial(){
@@ -500,7 +528,9 @@ public class SGV implements IGestaoVendasModelos{
                 numVendasFilial = 0;
                 for (String codProduto : this.faturacao.getProdutos()){
                     Fatura fatura = this.faturacao.getFatura(codProduto, i, j);
-                    numVendasFilial += fatura.getQuantidade();
+                    if(fatura != null){
+                        numVendasFilial += fatura.getQuantidade();
+                    }
                 }
                 numVendasMes += numVendasFilial;
                 sb.append("Filial " + (j+1) + ": " + numVendasFilial + " vendas.\n"); 
@@ -510,7 +540,35 @@ public class SGV implements IGestaoVendasModelos{
         }
         sb.append("----------- Vendas Globais -----------\n           " + numVendasGlobal + " vendas\n--------------------------------------\n");
         return sb.toString();
-    }    
+    }
+
     
-    
+    // Número de distintos clientes que compraram em cada mês (não interessa quantas vezes o cliente comprou) filial a filial.
+
+    public List<String> numClientesMes(){
+        List<String> aux = new ArrayList<>();
+        int numClientesMes, numClientesFilial, teste;
+        for (int i = 0; i < numMeses; i++){
+            StringBuilder sb = new StringBuilder();
+            sb.append(Meses.getMes(i) + ":\n");
+            numClientesMes = 0;
+            for (int j = 0; j < numFiliais; j++){
+                numClientesFilial = 0;
+                for (String codCliente : this.gestaoFilial.getClientes()){
+                    teste = 0;
+                    for (String codProduto : this.gestaoFilial.getProdutos(codCliente)){
+                        if (teste != 0) break;
+                        Fatura fatura = this.gestaoFilial.getFatura(codCliente, codProduto, i, j);
+                        if (fatura.getQuantidade() > 0){
+                            numClientesFilial++;
+                            teste++;
+                        }
+                    }
+                }
+                sb.append("\tFilial " + (j+1) + ": " + numClientesFilial + " clientes distintos.\n"); 
+            }
+            aux.add(sb.toString());
+        }
+        return aux;
+    }
 }

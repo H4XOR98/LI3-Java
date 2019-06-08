@@ -13,10 +13,14 @@ import java.io.FileNotFoundException;
 public class GestaoVendasApp{ 
     private static IGestaoVendasModelos criaDados(){
         IGestaoVendasModelos gestaoModelos = new SGV();
+        String titulo = "";
         try{
-            gestaoModelos.lerFicheiros();
+            System.out.println("\fIntroduza o nome do ficheiro de 'Vendas' que pretende ler.");
+            titulo = Input.lerString();
+            gestaoModelos.lerFicheiros(titulo);
         }catch(FileNotFoundException e){
-            System.out.println("Ficheiro não encontrado");
+            System.out.println("\fFicheiro com o titulo " + titulo + " e o ficheiro predefinido não encontrados!\n\n");
+            gestaoModelos = null;
         }
         return gestaoModelos;
     }
@@ -24,7 +28,7 @@ public class GestaoVendasApp{
     public static void main(String[] args) {
         IGestaoVendasModelos modelos = criaDados();
         if(modelos == null) { 
-            System.out.println("ERRO INICIALIZACAO");
+            System.out.println("ERRO INICIALIZAÇÃO");
             System.exit(-1); 
         }
         IGestaoVendasVista vista = new MenuPrincipal();

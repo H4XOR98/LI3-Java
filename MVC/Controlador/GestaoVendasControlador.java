@@ -15,9 +15,8 @@ import MVC.Vista.ListagemLista;
 import MVC.Vista.ListagemSimples;
 import MVC.Vista.MenuOpcoes;
 import MVC.Vista.Listagem;
-import MVC.Modelos.Catalogos.ClienteNaoExisteException;
-import MVC.Modelos.Catalogos.ProdutoNaoExisteException;
-import MVC.Modelos.Catalogos.NumeroInvalidoException;
+import MVC.Exceptions.*;
+
 /**
  * Escreva a descrição da classe GestaoVendasControlador aqui.
  * 
@@ -67,11 +66,11 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
             opcao = Input.lerInt();
             switch(opcao){
                 case 0 : break;
-                case 1 : this.numTotalVendasMes();
+                case 1 : this. numTotalVendasMes();
                          break;
                 case 2 : this.vendasGlobalFilial();
                          break;
-                case 3 : 
+                case 3 : this.numClientesMes();
                          break;
                 default : setVista(new VistaErro());
                           vista.show();
@@ -173,42 +172,62 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
     
     
     private void q2() {
-        String titulo = "------- Número total de vendas realizadas e de clientes distintos que as fizeram. -------";
+        String titulo = "------- Número total de vendas realizadas e de clientes distintos que as fizeram -------";
         int opcao = 0;
-        String s = "";
-        int mes = 0;
         setVista(new MenuOpcoes());
+        int mes = 0;
         do {
             vista.show();
             opcao = Input.lerInt();
-            if(opcao < 0 || opcao > 2){
-                setVista(new VistaErro());
-                vista.show();
-                Input.lerString();
-                setVista(new ListagemSimples("Pressione 'Enter' para retroceder."));
-                vista.show();
-                Input.lerString();
-                setVista(new MenuOpcoes());
-            }else if(opcao == 0){
-                 setVista(new ListagemSimples("Pressione 'Enter' para retroceder."));
-                 vista.show();
-                 Input.lerString();
-                 setVista(new MenuConsultasInterativas());
-            }else{
-                setVista(new ListagemSimples("Introduza o mês."));
-                vista.show();
-                mes = Input.lerInt();
-                if(mes < 1 || mes > 12){
-                    setVista(new VistaErro());
-                    vista.show();
-                    setVista(new MenuOpcoes());
-                }else{
-                    s = this.modelos.q2(mes-1,opcao);
-                    setVista(new Listagem(titulo,s));
-                    vista.show();
-                }
+            switch(opcao) {
+                case 1: setVista(new Listagem(titulo,"Introduza o mês pretendido."));
+                        vista.show();
+                        mes = Input.lerInt();
+                        mes--;
+                        if(mes<0 && mes>11){
+                            setVista(new VistaErro());
+                            vista.show();
+                            Input.lerString();
+                            setVista(new MenuOpcoes());
+                        }else{
+                            setVista(new Listagem(titulo,this.modelos.q2F(mes)));
+                            vista.show();
+                            setVista(new ListagemSimples("\n\nPressione 'Enter' para retroceder."));
+                            vista.show();
+                            Input.lerString();
+                            setVista(new MenuOpcoes());
+                        }
+                        break;
+                case 2: setVista(new Listagem(titulo,"Introduza o mês pretendido."));
+                        vista.show();
+                        mes = Input.lerInt();
+                        mes--;
+                        if(mes<0 && mes>11){
+                            setVista(new VistaErro());
+                            vista.show();
+                            Input.lerString();
+                            setVista(new MenuOpcoes());
+                        }else{
+                            setVista(new Listagem(titulo,this.modelos.q2G(mes)));
+                            vista.show();
+                            setVista(new ListagemSimples("\n\nPressione 'Enter' para retroceder."));
+                            vista.show();
+                            Input.lerString();
+                            setVista(new MenuOpcoes());
+                        }
+                        break;
+                case 0: setVista(new ListagemSimples("\n\nPressione 'Enter' para retroceder."));
+                        vista.show();
+                        Input.lerString();
+                        setVista(new MenuConsultasInterativas());
+                        break;
+                default: setVista(new VistaErro());
+                         vista.show();
+                         Input.lerString();
+                         setVista(new MenuOpcoes());
+                    break;
             }
-        }while(opcao < 0 || opcao > 2 && mes < 1 || mes > 12);
+        }while(opcao != 0);
     }
     
     private void q3(){
@@ -633,7 +652,7 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
         l.clear();
     }
     
-    //estatisticas
+     //estatisticas
 
     private void numTotalVendasMes(){
         String titulo = "------- Número total de compras por mês -------";
@@ -646,6 +665,7 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
         setVista(new MenuConsultasEstatisticas());
     }
     
+    
     private void vendasGlobalFilial(){
         String titulo = "------- Faturação total por mês, filial a filial e global -------";
         String s = this.modelos.vendasGlobalFilial();
@@ -655,5 +675,54 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
         vista.show();
         Input.lerString();
         setVista(new MenuConsultasEstatisticas());
+    }
+    
+    private void numClientesMes(){
+        String titulo = "------- Faturação total de cada produto, mês a mês, filial a filial -------";
+        int opcao = 0;
+        int pagina = 0;
+        int paginaOP = 0;
+        List<String> l = this.modelos.numClientesMes();
+        setVista(new ListagemLista(titulo, l));
+        do {
+            vista.show(pagina);
+            opcao = Input.lerInt();
+            switch(opcao) {
+                case 1 : pagina -= 1;
+                         if(pagina < 0) pagina = 0;
+                         vista.show(pagina);
+                         break;
+                case 2:
+                        pagina += 1;
+                        if(pagina >= vista.getNumPaginas()) pagina = vista.getNumPaginas() - 1;
+                        vista.show(pagina);
+                        break;
+                case 3: int elem = vista.getNumPaginas();
+                        setVista(new ListagemSimples("\n\nQual a página?"));
+                        vista.show();
+                        paginaOP = Input.lerInt();
+                        if(paginaOP < 0 || paginaOP > elem){
+                            setVista(new VistaErro());
+                            vista.show();
+                            Input.lerString();
+                        }else{
+                             pagina = paginaOP-1;
+                        }
+                        setVista(new ListagemLista(titulo, l));
+                        vista.show(pagina);
+                        break;
+                case 0: setVista(new ListagemSimples("\n\n\nPressione 'Enter' para retroceder."));
+                        vista.show();
+                        Input.lerString();
+                        setVista(new MenuConsultasEstatisticas());
+                        break;
+                default: setVista(new VistaErro());
+                         vista.show();
+                         Input.lerString();
+                         setVista(new ListagemLista(titulo, l));
+                    break;
+            }
+        }while(opcao != 0);
+        l.clear();
     }
 }

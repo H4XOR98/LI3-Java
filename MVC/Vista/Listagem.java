@@ -39,7 +39,7 @@ public class Listagem implements IGestaoVendasVista
      */
     public void show() {
         System.out.println("\f");
-        System.out.println(titulo);
+        System.out.println(titulo + "\n");
         if(this.conteudo.isEmpty()){
             System.out.println("#### Não existem elementos a listar. ###");
         }else{

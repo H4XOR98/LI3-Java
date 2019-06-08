@@ -55,8 +55,11 @@ public class Leitura{
     
     public Collection<String> readFilesWithIO() throws FileNotFoundException{
         Path p;
-        if (this.fileName.equals("")){
-            p = Paths.get("./Vendas_1M.txt");
+        if ((!this.fileName.equals("./Vendas_3M.txt")) && (!this.fileName.equals("./Vendas_5M.txt")) && 
+            (!this.fileName.equals("./Clientes.txt")) && (!this.fileName.equals("./Produtos.txt"))){
+            File file = new File(Constantes.ficheiroVendas);
+            if (!file.exists()) throw new FileNotFoundException(Constantes.ficheiroVendas);
+            p = Paths.get(Constantes.ficheiroVendas);
         }
         else{
             File file = new File(this.fileName);

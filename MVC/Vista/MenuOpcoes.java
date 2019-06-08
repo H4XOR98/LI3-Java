@@ -14,7 +14,7 @@ public class MenuOpcoes implements IGestaoVendasVista
         System.out.println("\f|*********************************************************************************|");
         System.out.println("|************************** Sistema de Gestão de Vendas **************************|");
         System.out.println("|*********************************************************************************|\n\n");
-        System.out.println("----------------------------- Consultas Estatísticas -----------------------------\n");
+        System.out.println("---- Número total de vendas realizadas e de clientes distintos que as fizeram ----\n");
         System.out.println(" 1 - Filial a Filial.");
         System.out.println(" 2 - Global.");
         System.out.println(" 0 - Sair");
