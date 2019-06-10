@@ -2,15 +2,23 @@ package MVC.Modelos;
 
 
 /**
- * Enumeration class Meses - write a description of the enum class here
+ * Enumeração que implementa todos os meses
  * 
- * @author (your name here)
- * @version (version number or date here)
+ * @author (Grupo 26) 
+ * @version (8/6/2019)
  */
 public enum Meses
 {
     Janeiro, Fevereiro, Março, Abril, Maio, Junho, Julho, Agosto, Setembro, Outubro, Novembro, Dezembro;
     
+    //métodos de instância
+    
+    //Gets
+    
+    /**
+     * Devolve um mês
+     * @return Mês
+     */
     public static Meses getMes(int valor){
         return values()[valor];
     }

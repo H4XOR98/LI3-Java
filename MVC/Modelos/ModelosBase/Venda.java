@@ -1,6 +1,5 @@
 package MVC.Modelos.ModelosBase;
 
-
 import MVC.Modelos.Catalogos.CatalogoClientes;
 import MVC.Modelos.Catalogos.CatalogoProdutos;
 import java.io.Serializable;
@@ -8,18 +7,54 @@ import java.util.InputMismatchException;
 import java.lang.NumberFormatException;
 import java.util.List;
 
+/**
+ * Classe que implementa uma Venda.
+ * 
+ * @author (Grupo 26) 
+ * @version (8/6/2019)
+ */
 public class Venda implements IVenda, Serializable {
-    //Variveis de instancia
-    private String codProd, codCli;
+    
+    //Variveis de Instância
+    
+    /**
+     * Código de produto
+     */
+    private String codProd;
+    
+    /**
+     * Código de cliente
+     */
+    private String codCli;
+    
+    /**
+     * Quantidade de unidades vendidas
+     */
     private int quantidade;
+    
+    /**
+     * Preco de cada unidade
+     */
     private double preco;
+    
+    /**
+     * Tipo da venda (N -> não promoção / P -> promoção)
+     */
     private String tipo;
-    private int mes, filial;
+    
+    /**
+     * Mês da venda
+     */
+    private int mes; 
+    
+    /**
+     * Filial da venda
+     */
+    private int filial;
 
     /**
-     * Construtores da classe Venda.
-     * Declaracao dos construtores por omissao (vazio),
-     * parametrizado e de copia.
+     * Construtores da classe Cliente
+     * Declaração dos construtores por omissao (vazio), parametrizado e de cópia
      */
    
     /**
@@ -37,7 +72,7 @@ public class Venda implements IVenda, Serializable {
 
     /**
      * Construtor parametrizado de Venda.
-     * Aceita como parametros um codigo.
+     * @param código de produto, preço, quantidade, tipo, código de cliente, mês, filial
      */
     public Venda(String codProd,double preco, int quantidade, String tipo, String codCli, int mes, int filial) {
         this.codProd = codProd;
@@ -49,7 +84,11 @@ public class Venda implements IVenda, Serializable {
         this.filial = filial;
     }
 
-    public Venda(Venda venda) {
+    /**
+     * Construtor de cópia de Cliente.
+     * @param Cliente original
+     */
+    public Venda (Venda venda) {
         this.codProd = venda.getCodProd();
         this.preco = venda.getPreco();
         this.quantidade = venda.getQuantidade();
@@ -59,45 +98,76 @@ public class Venda implements IVenda, Serializable {
         this.filial = venda.getFilial();
     }
 
+    // Gets
 
-    //gets e sets
-
-
+    /**
+      * Devolve o código do produto vendido
+      * @return string
+      */
     public String getCodProd() {
         return this.codProd;
     }
 
+    /**
+      * Devolve o código do cliente 
+      * @return string
+      */
     public String getCodCli() {
         return this.codCli;
     }
 
+    /**
+      * Devolve a quantidade de unidades vendidas
+      * @return int
+      */
     public int getQuantidade() {
         return this.quantidade;
     }
 
+    /**
+      * Devolve o preço de cada unidade
+      * @return double
+      */
     public double getPreco() {
         return this.preco;
     }
 
+    /**
+      * Devolve o tipo de venda
+      * @return string
+      */
     public String getTipo() {
         return this.tipo;
     }
 
+    /**
+      * Devolve o mês da realização da venda
+      * @return integer
+      */
     public int getMes() {
         return this.mes;
     }
 
+    /**
+      * Devolve a filial onde foi realizada a compra
+      * @return integer
+      */
     public int getFilial() {
         return this.filial;
     }
     
-
-    //calcula o valor da venda
+    /**
+     * Devolve o total faturado de uma venda
+     * @return double
+     */
     public double faturado(){
         return this.quantidade * this.preco;
     }
 
-    
+    /**
+     * Metodo que devolve a representação em String da Venda
+     * @return string
+     */
     public String toString(){
         StringBuilder sb = new StringBuilder();
         sb.append("-----------VENDA-----------\n");
@@ -112,6 +182,11 @@ public class Venda implements IVenda, Serializable {
         return sb.toString();
     }
     
+    /**
+     * Verifica a igualdade de dois objectos
+     * @param objecto
+     * @return boolean
+     */
     public boolean equals(Object o){
         if(o == this){
             return true;
@@ -124,7 +199,11 @@ public class Venda implements IVenda, Serializable {
                 this.preco == venda.getPreco() && this.tipo.equals(venda.getTipo()) && this.mes == venda.getMes() && this.filial == venda.getFilial();
     }
     
-    
+    /**
+     * Valida uma venda em formato string e, com isto, cria uma Venda caso seja válida
+     * @param String
+     * @return Venda
+     */
     public static Venda validaVenda(String linhaVenda){
         Venda v = null;
         int quantidade = 0, mes = 0, filial = 0;
@@ -172,6 +251,10 @@ public class Venda implements IVenda, Serializable {
         return null;
     }
     
+    /**
+     * Cria uma cópia de Venda
+     * @return Venda
+     */
     public Venda clone(){
         return new Venda(this);
     }

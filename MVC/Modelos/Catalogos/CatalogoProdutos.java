@@ -1,23 +1,51 @@
 package MVC.Modelos.Catalogos;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.TreeSet;
+import java.util.Comparator;
+import java.util.List;
+import java.util.ArrayList;
 import java.io.Serializable;
-import MVC.Modelos.ModelosBase.*;
+import MVC.Modelos.ModelosBase.Produto;
 import java.util.stream.Collectors;
 
+/**
+ * Classe que implementa um CatalogoProdutos
+ * 
+ * @author (Grupo 26) 
+ * @version (8/6/2019)
+ */
 public class CatalogoProdutos implements ICatalogoProdutos,Serializable{
    
     // Variáveis de Instância
     
+    /**
+     * Coleção de produtos 
+     */
     private Collection<Produto> produtos;
+    
+    /**
+     * Número de produtos lidos do ficheiro Produtos.txt
+     */
     private int numProdutosLidos;
 
-    
+    /**
+     * Comparador de produtos por ordem alfabética dos seus códigos
+     * @param Produto, Produto
+     * @return Integer
+     */
     Comparator<Produto> compProdutoCodigo = ((a,b) -> a.getCodigoProduto().compareTo(b.getCodigoProduto()));
-    
     
     // Construtores
     
+    /**
+     * Construtores da classe CatalogoProdutos
+     * Declaração dos construtores por omissao (vazio), parametrizado e de cópia
+     */
+    
+    /**
+     * Construtor por omissao de CatalogoProdutos
+     */
     public CatalogoProdutos(){
         this.produtos = new TreeSet<>(compProdutoCodigo);
         //this.produtos = new HashSet<>();
@@ -25,11 +53,19 @@ public class CatalogoProdutos implements ICatalogoProdutos,Serializable{
         this.numProdutosLidos = 0;
     }
     
+    /**
+     * Construtor de cópia de CatalogoProdutos
+     * @param Produtos original
+     */
     public CatalogoProdutos (CatalogoProdutos catProdutos){
         this.produtos = catProdutos.getProdutos();
         this.numProdutosLidos = getNumProdutosLidos();
     }
-    
+
+    /**
+     * Construtor parametrizado de CatalogoProdutos
+     * @param coleção de produtos, número de produtos lidos
+     */
     public CatalogoProdutos (Collection<Produto> produtos, int numProdutosLidos){
         this.produtos = new TreeSet<>(compProdutoCodigo);
         //this.produtos = new HashSet<>();
@@ -42,6 +78,10 @@ public class CatalogoProdutos implements ICatalogoProdutos,Serializable{
     
     // Gets
     
+    /**
+      * Devolve o TreeSet do CatalogoProdutos 
+      * @return TreeSet de Produtos
+      */
     public Collection<Produto> getProdutos(){
         Collection<Produto> aux = new TreeSet<>(compProdutoCodigo);
         //Collection<Produto> aux = new HashSet<>();
@@ -52,21 +92,27 @@ public class CatalogoProdutos implements ICatalogoProdutos,Serializable{
         return aux;
     }
     
+    /**
+     * Devolve o número de produtos lidos
+     * @return int
+     */
     public int getNumProdutosLidos(){
         return this.numProdutosLidos;
     }
     
-    
-    // Clone
-    
+    /**
+     * Cria uma cópia de CatalogoProdutos
+     * @return CatalogoProdutos
+     */
     public CatalogoProdutos clone(){
         return new CatalogoProdutos(this);
     }
-
     
-
-    // Equals
-    
+    /**
+     * Verifica a igualdade de dois objectos
+     * @param objecto
+     * @return boolean
+     */
     public boolean equals(Object o){
         if(o == this){
             return true;
@@ -80,8 +126,10 @@ public class CatalogoProdutos implements ICatalogoProdutos,Serializable{
         return this.produtos.equals(catProdutos.getProdutos()) && this.numProdutosLidos == catProdutos.getNumProdutosLidos();
     }
     
-    // toString
-    
+    /**
+     * Metodo que devolve a representação em String do CatalogoProdutos
+     * @return string
+     */
     public String toString(){
         StringBuilder sb = new StringBuilder();
         sb.append("----------Catalogo de Produtos----------\n");
@@ -93,8 +141,11 @@ public class CatalogoProdutos implements ICatalogoProdutos,Serializable{
         return sb.toString();
     }
     
-    // Valida os produtos
-    
+    /**
+     * Valida as string de produtos e, caso sejam válidos, cria para cada string um Produto e adiciona ao CatalogoProdutos
+     * @param coleção de strings
+     * @return CatalogoProdutos
+     */
     public CatalogoProdutos validaProdutos (Collection<String> produtos){
         CatalogoProdutos aux = new CatalogoProdutos();
         for(String s : produtos){
@@ -107,26 +158,38 @@ public class CatalogoProdutos implements ICatalogoProdutos,Serializable{
         return aux;
     }
 
-    
+    /**
+     * Determina se um produto existe no CatalogoProdutos
+     * @param código do produto
+     * @return boolean
+     */
     public boolean existeProduto(String codigoProduto){
         Produto p = new Produto(codigoProduto);
         return this.produtos.contains(p);
     }
     
-    
-    // Adiciona um produto 
-
+    /**
+     * Adiciona um Produto ao CatalogoProdutos
+     * @param Produto
+     */
     public void adicionaProduto(Produto produto){
         this.produtos.add(produto.clone());
     }   
 
-    // Liberta o Catálogo de Produtos
-    
+    /**
+     * Liberta o CatalogoProdutos da memória
+     */
     public void libertaCatalogoProdutos(){
         this.produtos.clear();
     }
     
-    public List<String> toList(){
-        return this.produtos.stream().map(Produto :: getCodigoProduto).collect(Collectors.toList());
+    /**
+     * Determina se um produto existe no CatalogoProdutos
+     * @param código do produto
+     * @return boolean
+     */
+    public boolean produtoExiste (String codProduto){
+        return this.produtos.contains(new Produto(codProduto));
     }
+    
 }

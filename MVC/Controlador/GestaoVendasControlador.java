@@ -21,21 +21,34 @@ import MVC.Exceptions.*;
  * Escreva a descrição da classe GestaoVendasControlador aqui.
  * 
  * @author (seu nome) 
- * @version (número de versão ou data)
+ * @version (08/06/2019)
  */
 public class GestaoVendasControlador implements IGestaoVendasControlador
 {
+    /** Modelos */
     private IGestaoVendasModelos modelos;
+    /** Vista */
     private IGestaoVendasVista vista;
     
+    /**
+     * Atualiza os modelos
+     * @param modelos novo valor de modelos
+     */
     public void setModelos(IGestaoVendasModelos modelos){
         this.modelos = modelos;
     }
     
+    /**
+     * Atualiza a vista
+     * @param vista novo valor de vista
+     */
     public void setVista(IGestaoVendasVista vista){
         this.vista = vista;
     }
     
+    /**
+     * Método que dá início ao controlador(Executa o menu principal)
+     */
     public void executa(){
         int opcao = -1;
         do{
@@ -288,7 +301,7 @@ public class GestaoVendasControlador implements IGestaoVendasControlador
         }
     }
     
-    public void q4 (){
+    private void q4 (){
         String titulo = "------- Dados refentes às vendas de um produto -------";
         int opcao = 0;
         int pagina = 0;

@@ -5,21 +5,48 @@ import java.util.List;
 import java.util.ArrayList;
 import MVC.IGestaoVendasVista;
 /**
- * Escreva a descrição da classe Listagem aqui.
+ * Classe que implementa uma listagem de uma lista.
+ * Lista por páginas uma List
  * 
- * @author (seu nome) 
- * @version (número de versão ou data)
+ * @author (Grupo 26) 
+ * @version (8/6/2019)
  */
 public class ListagemLista implements IGestaoVendasVista
 {
+    //Variáveis de instancia
+    
+    /**
+     * Título da listagem
+     */
     private String titulo;
+    /**
+     * Lista para listar
+     */
     private List<String> lista;
+    /**
+     * Página atual
+     */
     private int paginaAtual;
+    /**
+     * Número de páginas
+     */
     private int numPaginas;
     
-    
+    /**
+     * Número de elementos por página
+     */
     private static final int elementosPorPagina = 3;
     
+    //Construtores
+    
+    /**
+     * Construtores da classe ListagemLista
+     * Declaração dos construtores por omissao (vazio) e parametrizado
+     */
+    
+    /**
+     * Construtor por omissão da ListagemLista
+     */
     public ListagemLista(){
         this.titulo = "n/a";
         this.lista = new ArrayList<String>();
@@ -29,7 +56,8 @@ public class ListagemLista implements IGestaoVendasVista
     
     
     /**
-     * Constructor for objects of class Menu
+     * Construtor parametrizado da ListagemLista
+     * @param titulo, lista
      */
     public ListagemLista(String titulo,List<String> lista) {
         this.titulo = titulo;
@@ -38,30 +66,48 @@ public class ListagemLista implements IGestaoVendasVista
         this.numPaginas = (int) Math.ceil(((double)this.lista.size()) / ((double)this.elementosPorPagina));
     }
     
+    //métodos de instância
     
+    //Sets
+    
+    /**
+     * Declara uma nova lista
+     * @param lista
+     */
     public void setLista(List<String> lista) {
         this.lista = lista;
     }
     
+    //Gets
+    
+    /**
+     * Devolve a página atual
+     * @return paginaAtual
+     */
     public int getPaginaAtual(){
         return this.paginaAtual;
     }
     
-    
+    /**
+     * Devolve o número de páginas
+     * @return numPaginas
+     */
     public int getNumPaginas(){
         return this.numPaginas;
     }
     
+    //Imprime uma lista
     
+    /**
+     * Método que pede uma opção para apresentar um menu
+     */
     public void show() {
         System.out.println("\nOpção:");
     }
     
-    
-    
     /**
-     * MÈtodo para apresentar o menu e ler uma opÁ„o.
-     * 
+     * Método para apresentar um menu e ler uma opção
+     * @param op
      */
     public void show(int op) {
         System.out.println("\f" + titulo + "\n");
